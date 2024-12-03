@@ -3,7 +3,11 @@ import 'dart:async';
 class PhuSphere<S> extends Stream<S> {
   PhuSphere(this.state);
   final StreamController<S> _controller = StreamController<S>.broadcast();
-  final S state;
+  S state;
+
+  void exude(S state) {
+    _controller.add(state);
+  }
 
   @override
   StreamSubscription<S> listen(void Function(S event)? onData,

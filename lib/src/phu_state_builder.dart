@@ -18,7 +18,7 @@ class PhuStateBuilder<P extends PhuSphere<S>, S> extends StatefulWidget {
   });
 
   final P? sphere;
-  final BuildWhen? buildWhen;
+  final BuildWhen<S>? buildWhen;
   final SphereWidgetBuilder<S> builder;
 
   @override
@@ -79,7 +79,7 @@ class _PhuSphereListener<P extends PhuSphere<S>, S> extends StatefulWidget {
   });
 
   final P sphere;
-  final BuildWhen? buildWhen;
+  final BuildWhen<S>? buildWhen;
   final SphereBuildCallback<S> buildCallBack;
   final Widget child;
 
@@ -96,6 +96,8 @@ class _PhuSphereListenerState<P extends PhuSphere<S>, S>
   @override
   void initState() {
     super.initState();
+    _sphere = widget.sphere;
+    _previousState = _sphere.state;
     _subscribe();
   }
 
@@ -123,9 +125,7 @@ class _PhuSphereListenerState<P extends PhuSphere<S>, S>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
+  Widget build(BuildContext context) => widget.child;
 
   @override
   void dispose() {
