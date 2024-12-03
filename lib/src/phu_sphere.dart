@@ -1,11 +1,23 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
+
 class PhuSphere<S> extends Stream<S> {
-  PhuSphere(this.state);
+  PhuSphere(this._state) {
+    _isClosed = false;
+  }
+
   final StreamController<S> _controller = StreamController<S>.broadcast();
-  S state;
+
+  S get state => _state;
+  S _state;
+
+  bool get isClosed => _isClosed;
+  late bool _isClosed;
 
   void exude(S state) {
+    if (_state == state || isClosed) return;
+    _state = state;
     _controller.add(state);
   }
 
@@ -14,5 +26,12 @@ class PhuSphere<S> extends Stream<S> {
       {Function? onError, void Function()? onDone, bool? cancelOnError}) {
     return _controller.stream.listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+  }
+
+  @mustCallSuper
+  void close() {
+    debugPrint('$runtimeType closed');
+    _isClosed = true;
+    _controller.close();
   }
 }

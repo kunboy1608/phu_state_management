@@ -27,15 +27,8 @@ class PhuStateBuilder<P extends PhuSphere<S>, S> extends StatefulWidget {
 
 class _PhuStateBuilderState<P extends PhuSphere<S>, S>
     extends State<PhuStateBuilder<P, S>> {
-  late P _sphere;
-  late S _state;
-
-  @override
-  void initState() {
-    super.initState();
-    _sphere = widget.sphere ?? context.read<P>();
-    _state = _sphere.state;
-  }
+  P? _sphere;
+  S? _state;
 
   @override
   void didUpdateWidget(PhuStateBuilder<P, S> oldWidget) {
@@ -44,7 +37,7 @@ class _PhuStateBuilderState<P extends PhuSphere<S>, S>
     final currentSphere = widget.sphere ?? oldSphere;
     if (oldSphere != currentSphere) {
       _sphere = currentSphere;
-      _state = _sphere.state;
+      _state = _sphere!.state;
     }
   }
 
@@ -54,17 +47,17 @@ class _PhuStateBuilderState<P extends PhuSphere<S>, S>
     final sphere = widget.sphere ?? context.read<P>();
     if (_sphere != sphere) {
       _sphere = sphere;
-      _state = _sphere.state;
+      _state = _sphere!.state;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return _PhuSphereListener(
-      sphere: _sphere,
+      sphere: _sphere!,
       buildWhen: widget.buildWhen,
       buildCallBack: (context, S state) => setState(() => _state = state),
-      child: widget.builder(context, _state),
+      child: widget.builder(context, _state as S),
     );
   }
 }
