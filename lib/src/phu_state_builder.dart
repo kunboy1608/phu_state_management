@@ -9,7 +9,13 @@ typedef BuildWhen<S> = bool Function(S previous, S current);
 typedef SphereWidgetBuilder<S> = Widget Function(BuildContext context, S state);
 typedef SphereBuildCallback<S> = void Function(BuildContext context, S state);
 
+/// A [PhuStateBuilder] is a widget that rebuilds itself when the state of a [PhuSphere] changes.
+///
+/// This widget listens to a [PhuSphere] and calls the [builder] function whenever the state changes.
 class PhuStateBuilder<P extends PhuSphere<S>, S> extends StatefulWidget {
+  /// Creates a [PhuStateBuilder].
+  ///
+  /// The [sphere] and [builder] parameters are required.
   const PhuStateBuilder({
     super.key,
     this.sphere,
@@ -17,12 +23,45 @@ class PhuStateBuilder<P extends PhuSphere<S>, S> extends StatefulWidget {
     required this.builder,
   });
 
+  /// The [PhuSphere] that this builder listens to.
   final P? sphere;
+
+  /// A callback function that determines whether the widget should be rebuilt
+  /// based on changes in the state.
+  ///
+  /// If [buildWhen] is provided, it will be called with the previous and current
+  /// state, and should return [true] if the widget should be rebuilt, or [false]
+  /// if it should not.
+  ///
+  /// If [buildWhen] is not provided, the widget will be rebuilt whenever the state
+  /// changes.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// PhuStateBuilder<MySphere, int>(
+  ///   buildWhen: (previous, current) => current % 2 == 0,
+  ///   builder: (context, state) {
+  ///     return Center(
+  ///       child: Text(
+  ///         "Ony rebuild when state % 2 == 0 \n\n$state",
+  ///         style: Theme.of(context).textTheme.titleLarge,
+  ///         textAlign: TextAlign.center,
+  ///       ),
+  ///     );
+  ///   },
+  /// )
+  /// ```
+  /// This can be useful for optimizing performance by preventing unnecessary rebuilds.
   final BuildWhen<S>? buildWhen;
-  final SphereWidgetBuilder<S> builder;
+
+  /// The builder function that is called whenever the state of the [PhuSphere] changes.
+  ///
+  /// The builder function takes the current state of the [PhuSphere] and the [BuildContext] as parameters
+  /// and returns a widget.
+  final Widget Function(BuildContext context, S state) builder;
 
   @override
-  State<StatefulWidget> createState() => _PhuStateBuilderState<P, S>();
+  State<PhuStateBuilder<P, S>> createState() => _PhuStateBuilderState<P, S>();
 }
 
 class _PhuStateBuilderState<P extends PhuSphere<S>, S>
