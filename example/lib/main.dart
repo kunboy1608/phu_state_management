@@ -20,8 +20,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: PhuSphereProvider(
-        sphere: MySphere(0),
+      home: PhuSphereMultiProvider(
+        spheres: [MySphere(0)],
         child: Scaffold(
           appBar: AppBar(
             title: PhuStateBuilder<RootSphere, int>(builder: (context, state) {
