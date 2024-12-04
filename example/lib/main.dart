@@ -1,8 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:phu_state_management/phu_state_management.dart';
 import 'package:phu_state_management_example/empty_screen.dart';
+
+import 'sphere/my_sphere.dart';
+import 'sphere/root_sphere.dart';
 
 void main() {
   runApp(PhuSphereProvider(sphere: RootSphere(0), child: const MyApp()));
@@ -94,35 +95,5 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
-  }
-}
-
-class MySphere extends PhuSphere<int> {
-  MySphere(super.state);
-
-  void increment() {
-    final newState = state + 1;
-    exude(newState);
-  }
-}
-
-class RootSphere extends PhuSphere<int> {
-  RootSphere(super.state) {
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      increment();
-    });
-  }
-
-  late Timer _timer;
-
-  void increment() {
-    final newState = state + 1;
-    exude(newState);
-  }
-
-  @override
-  void close() {
-    _timer.cancel();
-    super.close();
   }
 }
